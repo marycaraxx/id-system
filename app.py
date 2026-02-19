@@ -65,7 +65,7 @@ def load_user(user_id):
 def generate_qr_base64(data):
     """Generates a QR code as a base64 string for a single resident."""
     qr_content = (
-        f"MUNICIPALITY OF BOAC ID\n"
+        f"MUNICIPALITY OF MOGPOG ID\n"
         f"----------------------\n"
         f"ID NO: {data.get('id_number')}\n"
         f"NAME: {data.get('full_name')}\n"
