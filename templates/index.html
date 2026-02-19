@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Application – Boac ID System</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --boac-forest: #004422;
+            --boac-lime: #89C541;
+            --boac-light-green: #e8f5e9;
+            --sidebar-dark: #0f172a; 
+            --bg-light: #f1f5f9;
+            --text-dark: #1e293b;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 25px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .lgu-logo-img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            background: white;
+            padding: 4px;
+            border-radius: 10px;
+        }
+
+        .sidebar-title {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .nav-menu {
+            flex-grow: 1;
+            padding: 24px 16px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 12px;
+            padding-left: 12px;
+            display: block;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item i { margin-right: 12px; width: 20px; text-align: center; }
+        .nav-item:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+        .nav-item.active { background: var(--boac-forest); color: white; box-shadow: 0 4px 12px rgba(0, 68, 34, 0.3); }
+
+        .user-section {
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .user-avatar {
+            width: 40px; height: 40px;
+            background: var(--boac-lime);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 800; color: var(--boac-forest);
+        }
+
+        .user-meta { font-size: 12px; }
+        .user-name { display: block; font-weight: 700; color: white; margin-bottom: 2px; }
+        .logout-link { color: #94a3b8; text-decoration: none; font-size: 11px; }
+        .logout-link:hover { color: #f87171; }
+
+        /* ================= MAIN CONTENT ================= */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .top-bar {
+            padding: 16px 40px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky; top: 0; z-index: 10;
+        }
+
+        .breadcrumb { font-size: 13px; color: #64748b; }
+        .breadcrumb b { color: var(--sidebar-dark); }
+
+        .content-area {
+            padding: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header { margin-bottom: 32px; }
+        .page-header h1 { font-size: 28px; font-weight: 900; color: var(--sidebar-dark); margin: 0; letter-spacing: -0.5px; }
+        .page-header p { color: #64748b; margin: 8px 0 0; font-size: 15px; }
+
+        /* ================= FORM CARD ================= */
+        .modern-card {
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 40px;
+        }
+
+        .form-section-header {
+            display: flex; align-items: center; gap: 10px;
+            margin: 0 0 25px 0; padding-bottom: 10px;
+            border-bottom: 2px solid var(--boac-light-green);
+        }
+
+        .form-section-header i { color: var(--boac-forest); }
+        .form-group-title {
+            font-size: 14px; font-weight: 800; color: var(--boac-forest);
+            margin: 0; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .grid-row {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 24px; margin-bottom: 30px;
+        }
+
+        .grid-row.three-col { grid-template-columns: repeat(3, 1fr); }
+
+        .input-field label {
+            display: block; font-size: 11px; font-weight: 800;
+            color: #475569; margin-bottom: 8px; text-transform: uppercase;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%; padding: 12px 16px;
+            border: 2px solid #e2e8f0; border-radius: 8px;
+            font-family: 'Montserrat', sans-serif; font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        input:focus { outline: none; border-color: var(--boac-forest); background: #f8fafc; }
+
+        /* ================= PHOTO SIDEBAR ================= */
+        .photo-sidebar {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 15px;
+        }
+
+        .photo-box {
+            width: 200px; height: 200px;
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 20px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            overflow: hidden; position: relative;
+        }
+
+        #preview, #webcam { width: 100%; height: 100%; object-fit: cover; }
+        #preview { display: none; }
+        #webcam { display: none; }
+        
+        .photo-placeholder { text-align: center; color: #94a3b8; }
+        .photo-placeholder i { font-size: 40px; margin-bottom: 10px; }
+
+        .id-number-display {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--boac-forest);
+            letter-spacing: 1px;
+            text-align: center;
+            min-height: 22px;
+        }
+
+        /* ================= BUTTONS ================= */
+        .form-footer {
+            grid-column: span 2;
+            display: flex; justify-content: flex-end; gap: 15px;
+            margin-top: 20px; padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 14px 28px; border-radius: 10px;
+            font-weight: 800; font-size: 14px;
+            cursor: pointer; border: none;
+            display: flex; align-items: center; gap: 10px;
+            transition: 0.2s;
+        }
+
+        .btn-cancel { background: #f1f5f9; color: #64748b; }
+        .btn-submit { background: var(--boac-forest); color: white; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 68, 34, 0.3); }
+
+        /* Camera Specific Buttons */
+        .btn-camera {
+            width: 100%;
+            background: white;
+            color: var(--sidebar-dark);
+            border: 2px solid var(--border-color);
+            padding: 12px;
+            justify-content: center;
+        }
+        .btn-camera:hover { background: var(--bg-light); }
+
+        .status-badge {
+            background: #dcfce7; color: #166534;
+            padding: 6px 14px; border-radius: 99px;
+            font-weight: 800; font-size: 11px;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .status-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="{{ url_for('static', filename='images/logo(2).png') }}" class="lgu-logo-img" alt="Boac Logo">
+            <div class="sidebar-title">MUNICIPALITY OF<br>BOAC</div>
+        </div>
+        
+        <nav class="nav-menu">
+            <span class="nav-label">Main Menu</span>
+            <a href="{{ url_for('index') }}" class="nav-item active">
+                <i class="fa-solid fa-address-card"></i> New Application
+            </a>
+            <a href="{{ url_for('id_preview') }}" class="nav-item">
+                <i class="fa-solid fa-magnifying-glass"></i> ID Preview
+            </a>
+            <a href="{{ url_for('batch_view') }}" class="nav-item">
+                <i class="fa-solid fa-print"></i> Batch Printing
+            </a>
+        </nav>
+
+        <div class="user-section">
+            <div class="user-avatar">AD</div>
+            <div class="user-meta">
+                <span class="user-name">Administrator</span>
+                <a href="{{ url_for('logout') }}" class="logout-link">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-container">
+        <div class="top-bar">
+            <div class="breadcrumb">System / <b>Employee ID Registration</b></div>
+            <div class="status-badge"><div class="status-dot"></div> System Online</div>
+        </div>
+
+        <div class="content-area">
+            <div class="page-header">
+                <h1>Employee ID Application</h1>
+                <p>Register a new employee and generate a municipal identification card.</p>
+            </div>
+
+            <form action="/generate" method="POST" enctype="multipart/form-data" id="applicationForm">
+                <div class="modern-card">
+                    <div class="form-fields">
+                        <div class="form-section-header">
+                            <i class="fa-solid fa-user-tag"></i>
+                            <h3 class="form-group-title">Personal Details</h3>
+                        </div>
+                        
+                        <div class="grid-row three-col">
+                            <div class="input-field">
+                                <label>Full Name</label>
+                                <input type="text" name="full_name" placeholder="E.g. JUAN DELA CRUZ" required>
+                            </div>
+                            <div class="input-field">
+                                <label>Preferred Nickname</label>
+                                <input type="text" name="nickname" placeholder="E.g. JUAN" required>
+                            </div>
+                            <div class="input-field">
+                                <label>Control ID Number</label>
+                                <input type="text" id="idInput" name="id_number" placeholder="2026-BOAC-XXXX" required>
+                            </div>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="input-field">
+                                <label>Designation / Position</label>
+                                <input type="text" name="position" placeholder="E.g. OFFICE CLERK" required>
+                            </div>
+                            <div class="input-field">
+                                <label>Assigned Office</label>
+                                <input type="text" name="office" placeholder="E.g. MAYOR'S OFFICE" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section-header" style="margin-top: 10px;">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                            <h3 class="form-group-title">Emergency Contact</h3>
+                        </div>
+
+                        <div class="input-field" style="margin-bottom: 24px;">
+                            <label>Complete Home Address</label>
+                            <input type="text" name="address" placeholder="Boac, Marinduque" required>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="input-field">
+                                <label>Contact Person Name</label>
+                                <input type="text" name="contact_name" required>
+                            </div>
+                            <div class="input-field">
+                                <label>Emergency Number</label>
+                                <input type="text" name="contact_number" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo-sidebar">
+                        <label style="font-size: 11px; font-weight: 800; color: #475569; align-self: flex-start;">ID PHOTO PREVIEW</label>
+                        <div class="photo-box" id="photoBox">
+                            <video id="webcam" autoplay playsinline></video>
+                            <canvas id="canvas" width="400" height="400" style="display:none;"></canvas>
+                            <img id="preview" alt="ID Preview">
+                            <div class="photo-placeholder" id="placeholder">
+                                <i class="fa-solid fa-camera-retro"></i>
+                                <span style="font-size: 10px; font-weight: 700; display: block;">NO IMAGE</span>
+                            </div>
+                        </div>
+                        
+                        <div class="id-number-display" id="idDisplay">2026-BOAC-XXXX</div>
+
+                        <button type="button" class="btn btn-camera" id="startCamBtn">
+                            <i class="fa-solid fa-video"></i> Open Camera
+                        </button>
+                        <button type="button" class="btn btn-camera" id="captureBtn" style="display:none; background: var(--boac-lime); color: white; border: none;">
+                            <i class="fa-solid fa-circle-dot"></i> Capture Photo
+                        </button>
+
+                        <div class="input-field" style="width: 100%;">
+                            <label>Or Upload Profile Photo</label>
+                            <input type="file" name="photo_file" id="imgInp" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="form-footer">
+                        <button type="reset" class="btn btn-cancel" onclick="resetPreview()">Clear Form</button>
+                        <button type="submit" class="btn btn-submit">Save & Generate ID</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const imgInp = document.getElementById('imgInp');
+        const preview = document.getElementById('preview');
+        const placeholder = document.getElementById('placeholder');
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('canvas');
+        const startCamBtn = document.getElementById('startCamBtn');
+        const captureBtn = document.getElementById('captureBtn');
+        
+        // ID Sync Elements
+        const idInput = document.getElementById('idInput');
+        const idDisplay = document.getElementById('idDisplay');
+
+        // Update ID Text in real-time
+        idInput.addEventListener('input', () => {
+            idDisplay.textContent = idInput.value || "2026-BOAC-XXXX";
+        });
+
+        // Photo Preview Logic (File Upload)
+        imgInp.addEventListener('change', () => {
+            stopCamera();
+            const file = imgInp.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    placeholder.style.display = 'none';
+                    video.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Camera Logic
+        startCamBtn.addEventListener('click', async function() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 400, height: 400 }, audio: false });
+                video.srcObject = stream;
+                video.style.display = 'block';
+                preview.style.display = 'none';
+                placeholder.style.display = 'none';
+                
+                startCamBtn.style.display = 'none';
+                captureBtn.style.display = 'flex';
+            } catch (err) {
+                alert("Camera access denied or not found.");
+            }
+        });
+
+        captureBtn.addEventListener('click', function() {
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            canvas.toBlob(function(blob) {
+                const file = new File([blob], "captured_photo.png", { type: "image/png" });
+                
+                // Inject the captured file into the file input
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                imgInp.files = dataTransfer.files;
+
+                // Show the preview of what was captured
+                preview.src = URL.createObjectURL(blob);
+                preview.style.display = 'block';
+                
+                stopCamera();
+            }, 'image/png');
+        });
+
+        function stopCamera() {
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+                video.style.display = 'none';
+            }
+            startCamBtn.style.display = 'flex';
+            startCamBtn.innerHTML = '<i class="fa-solid fa-camera"></i> Retake Photo';
+            captureBtn.style.display = 'none';
+        }
+
+        function resetPreview() {
+            stopCamera();
+            preview.style.display = 'none';
+            placeholder.style.display = 'block';
+            idDisplay.textContent = "2026-BOAC-XXXX";
+            startCamBtn.innerHTML = '<i class="fa-solid fa-video"></i> Open Camera';
+        }
+    </script>
+</body>
+</html>

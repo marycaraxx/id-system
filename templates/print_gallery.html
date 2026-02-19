@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Print ID Batch | Municipality of Boac</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --boac-forest: #004422; /* Dark green from photos */
+            --boac-lime: #89C541;   /* Lime green accent */
+            --boac-light: #E8F5E9;  /* Mesh pattern color */
+        }
+
+        /* ===== Page Base ===== */
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #555;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ===== Action Bar ===== */
+        .no-print-header {
+            width: 100%;
+            background: #222;
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+
+        .btn-print { background: var(--boac-lime); color: #fff; }
+        .btn-home { background: #fff; color: #333; margin-left: 10px; }
+        .btn:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* ===== A4 Print Layout ===== */
+        .print-container {
+            width: 210mm;
+            background: #fff;
+            padding: 10mm;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15mm; /* Space for cutting */
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+        }
+
+        /* ===== ID Card (Exact Size: 86mm x 130mm) ===== */
+        .id-card-item {
+            width: 86mm;
+            height: 130mm;
+            background-color: #fff;
+            position: relative;
+            overflow: hidden;
+            page-break-inside: avoid;
+            border: 1px solid #ddd;
+        }
+
+        /* ===== Exact Honeycomb Mesh ===== */
+        .id-card-item::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(30deg, var(--boac-light) 12%, transparent 12.5%, transparent 87%, var(--boac-light) 87.5%),
+                linear-gradient(150deg, var(--boac-light) 12%, transparent 12.5%, transparent 87%, var(--boac-light) 87.5%),
+                linear-gradient(60deg, #f9fff9 25%, transparent 25.5%, transparent 75%, #f9fff9 75%);
+            background-size: 20px 35px;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        /* ===== SVG Waves (Replicating Picture 1 & 2) ===== */
+        .wave-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ===== Content Overlay ===== */
+        .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-logo { width: 50px; margin-bottom: 4px; }
+        .gov-text { font-size: 9px; margin: 0; font-weight: 500; }
+        .municipality { font-size: 15px; font-weight: 900; margin: 1px 0; color: #000; }
+        .province { font-size: 10px; margin: 0; font-weight: 500; }
+
+        /* Photo with Exact Ring */
+        .photo-ring {
+            width: 135px;
+            height: 135px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            outline: 4px solid var(--boac-lime);
+            margin: 15px auto;
+            overflow: hidden;
+            background: #fff;
+            position: relative;
+            z-index: 5;
+        }
+        .photo-ring img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Text Layout (Exact Sizing) */
+        .nickname {
+            font-size: 50px;
+            font-weight: 900;
+            color: var(--boac-forest);
+            margin: 0;
+            line-height: 0.9;
+            letter-spacing: -1.5px;
+        }
+
+        .full-name {
+            font-size: 17px;
+            font-weight: 700;
+            margin: 5px 0;
+            color: #000;
+        }
+
+        .dept-bar {
+            font-size: 9px;
+            font-weight: 800;
+            color: #117554;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            padding: 4px 0;
+            margin: 8px 0;
+            width: 90%;
+            text-transform: uppercase;
+        }
+
+        .position {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--boac-forest);
+            text-transform: uppercase;
+        }
+
+        /* Footer / Signatory (Exact Bottom Placement) */
+        .footer-signatory {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            z-index: 10;
+        }
+        .mayor-name { font-size: 18px; font-weight: 800; margin: 0; }
+        .mayor-title { font-size: 12px; font-style: italic; margin: 0; font-weight: 400; }
+
+        /* ===== Print Rules ===== */
+        @media print {
+            .no-print-header { display: none; }
+            body { background: #fff; padding: 0; }
+            .print-container { box-shadow: none; padding: 0; width: 210mm; }
+            .id-card-item { border: 1px solid #eee; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="no-print-header">
+        <button class="btn btn-print" onclick="window.print()">🖨️ PRINT BATCH (A4)</button>
+        <button class="btn btn-home" onclick="window.location.href='/'">🏠 BACK TO FORM</button>
+    </div>
+
+    <div class="print-container">
+        {% for person in records %}
+        <div class="id-card-item">
+            
+            <svg class="wave-svg" viewBox="0 0 100 150" preserveAspectRatio="none">
+                <path d="M0,0 L100,0 V15 Q70,5 40,20 T0,12 Z" fill="#004422" />
+                <path d="M0,0 L100,0 V25 Q75,15 50,30 T0,20 Z" fill="#89C541" opacity="0.4"/>
+                
+                <path d="M0,150 L100,150 V125 Q70,140 40,115 T0,135 Z" fill="#004422" />
+                <path d="M0,150 L100,150 V135 Q75,145 50,125 T0,140 Z" fill="#89C541" />
+            </svg>
+
+            <div class="content">
+                <img src="{{ url_for('static', filename='images/logo(2).png') }}" class="header-logo">
+                <p class="gov-text">Republic of the Philippines</p>
+                <h2 class="municipality">MUNICIPALITY OF BOAC</h2>
+                <p class="province">Province of Marinduque</p>
+
+                <div class="photo-ring">
+                    <img src="{{ url_for('static', filename='uploads/' + person.photo_filename) if person.photo_filename else '' }}">
+                </div>
+
+                <div class="nickname">{{ person.nickname }}</div>
+                <div class="full-name">{{ person.full_name }}</div>
+                <div class="dept-bar">{{ person.office }}</div>
+                <div class="position">{{ person.position }}</div>
+            </div>
+
+            <div class="footer-signatory">
+                <p class="mayor-name">ARMI DC. CARRION</p>
+                <p class="mayor-title">Municipal Mayor</p>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

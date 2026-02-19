@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Municipal ID - Overlay Version</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --boac-forest: #004422; }
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0; padding: 40px;
+            background: #f2f4f6;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .print-container {
+            display: flex; gap: 40px;
+            justify-content: center; flex-wrap: wrap;
+        }
+
+        /* ================== ID CARD BASE ================== */
+        .id-card {
+            width: 325px; height: 485px;
+            position: relative; overflow: hidden;
+            border-radius: 14px;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .front { background-image: url("{{ url_for('static', filename='images/front.jpg') }}"); }
+        .back { background-image: url("{{ url_for('static', filename='images/back.jpg') }}"); }
+
+        /* ================== FRONT OVERLAYS ================== */
+        .photo-ring {
+            position: absolute; 
+            top: 160px; /* Lowered from 150px to clear the header */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px; height: 140px;
+            border-radius: 50%; border: 4px solid #fff;
+            outline: 4px solid #89C541;
+            overflow: hidden; background: #fff;
+        }
+        .photo-ring img { width: 100%; height: 100%; object-fit: cover; }
+
+        .text-overlay {
+            position: absolute; 
+            top: 310px; /* Lowered from 285px to stay below the photo */
+            width: 100%; text-align: center;
+        }
+
+        .nickname {
+            font-size: 40px; font-weight: 900;
+            color: var(--boac-forest); margin: 0;
+            line-height: 1; letter-spacing: -1px;
+            text-transform: uppercase; /* Matches the "nickname" style in your sample */
+        }
+
+        .fullname { font-size: 16px; font-weight: 700; margin: 2px 0; }
+
+        .dept-box {
+            border-top: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            margin: 8px auto; width: 85%;
+            padding: 4px 0; font-size: 8.5px;
+            font-weight: 800; color: #117554;
+        }
+
+        .position { font-size: 22px; font-weight: 900; color: var(--boac-forest); }
+
+        /* ================== BACK OVERLAYS ================== */
+        .qr-area {
+            position: absolute; top: 110px; left: 50%;
+            transform: translateX(-50%);
+            width: 150px; height: 150px;
+            background: white; padding: 10px; border-radius: 8px;
+        }
+        .qr-area img { width: 100%; }
+
+        .id-label {
+            position: absolute; top: 270px;
+            width: 100%; text-align: center;
+            font-size: 24px; font-weight: 900; color: var(--boac-forest);
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .id-card { 
+                box-shadow: none; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-container">
+        <div class="id-card front">
+            <div class="photo-ring">
+                <img src="{{ url_for('static', filename='uploads/' + photo_filename) }}" alt="Photo">
+            </div>
+            <div class="text-overlay">
+                <div class="nickname">{{ nickname }}</div>
+                <div class="fullname">{{ full_name }}</div>
+                <div class="dept-box">{{ office }}</div>
+                <div class="position">{{ position }}</div>
+            </div>
+        </div>
+
+        <div class="id-card back">
+            <div class="qr-area">
+                <img src="data:image/png;base64,{{ qr_code }}" alt="QR">
+            </div>
+            <div class="id-label">ID: {{ id_number }}</div>
+        </div>
+    </div>
+</body>
+</html>

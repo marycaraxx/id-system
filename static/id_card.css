@@ -1,0 +1,57 @@
+/* GLOBAL STYLES */
+body {
+  background: #f2f4f6;
+  font-family: 'Montserrat', sans-serif; /* Matching the clean sans-serif in the photo */
+  margin: 0;
+}
+
+.print-container {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* CARD BASE - Standard Vertical ID Dimensions */
+.id-card {
+  width: 325px;
+  height: 485px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* HEX PATTERN - Revised for exact Boac ID Watermark look */
+.hex-bg {
+  position: absolute;
+  inset: 0;
+  /* Updated to a more accurate light-green honeycomb mesh */
+  background-image: 
+    linear-gradient(30deg, #e8f5e9 12%, transparent 12.5%, transparent 87%, #e8f5e9 87.5%, #e8f5e9),
+    linear-gradient(150deg, #e8f5e9 12%, transparent 12.5%, transparent 87%, #e8f5e9 87.5%, #e8f5e9),
+    linear-gradient(60deg, #f1f8f1 25%, transparent 25.5%, transparent 75%, #f1f8f1 75%, #f1f8f1);
+  background-size: 20px 35px;
+  opacity: 0.5; /* Keeps it subtle as seen in the background of 'FRANZ' */
+  z-index: 0;
+}
+
+/* CONTENT CONTAINER */
+.content {
+  position: relative;
+  z-index: 2; /* Ensures text stays above the pattern and waves */
+  text-align: center;
+  padding: 15px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* COLOR VARIABLES FOR EXACT MATCH */
+:root {
+  --boac-dark-green: #06402B; /* The deep green used for 'FRANZ' and Mayor's name */
+  --boac-lime-green: #89C541; /* The bright green used for the photo ring and waves */
+  --boac-dept-green: #117554; /* The mid-tone green for the ICT section text */
+}
